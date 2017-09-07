@@ -1,0 +1,39 @@
+<div class="container-fluid">
+    <h3>Mean Values of Motes :</h3>
+    <!--These are from  mysql data base-->
+    <table border=1 class="table table-striped">
+        <tr>
+            <th><a ng-click="sortField = 'Index'; reverse=!reverse">Index</a></th>
+            <th><a ng-click="sortField = 'Mac'; reverse=!reverse">Mac-Id</a></th>
+            <th><a ng-click="sortField = 'Temperature'; reverse=!reverse">Mean Temperature Value</a></th>
+            <th><a ng-click="sortField = 'Inclination[X]'; reverse=!reverse">Mean Inclination [X] Value</a></th>
+            <th><a ng-click="sortField = 'Inclination[Y]'; reverse=!reverse">Mean Inclination [Y] Value</a></th>
+            <th><a ng-click="sortField = 'Time'; reverse=!reverse">Time Stamp</a></th>
+        </tr>
+        <tr *ngFor="let tabule of configs ; let i = index" [attr.data-index]="i">
+            <td>{{ i+1}}</td>
+            <td>{{ tabule.config_macid }}</td>
+            <td>{{ tabule.temperature_mean_value }}</td>
+            <td>{{ tabule.inclination_mean_value_X }}</td>
+            <td>{{ tabule.inclination_mean_value_Y }}</td>
+            <td>{{ tabule.config_time }}</td>
+        </tr>
+    </table>
+</div>
+<!-- example data from mean configuration table from mysql database 
+
+[
+
+{"config_id":"1",
+"config_macid":"00-17-0D-00-00-30-4D-94",
+"temperature_mean_value":13.0561,
+"inclination_mean_value_X":7.2696,
+"inclination_mean_value_Y":2.4558,
+"config_time":"2017-04-09T06:15:22.000Z"},
+
+{"config_id":"2","config_macid":"00-17-0D-00-00-58-2F-F2","temperature_mean_value":13.0458,"inclination_mean_value_X":7.163,"inclination_mean_value_Y":2.356,"config_time":"2017-04-09T06:15:22.000Z"},{"config_id":"3","config_macid":"00-17-0D-00-00-30-3F-17","temperature_mean_value":13.2452,"inclination_mean_value_X":7.3719,"inclination_mean_value_Y":2.536,"config_time":"2017-04-09T06:15:22.000Z"}]
+
+
+
+partion by macid
+-->

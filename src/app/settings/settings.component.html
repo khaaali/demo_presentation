@@ -1,0 +1,290 @@
+<!--
+
+show threshold values, criteria used to sort the data to send mail notifications
+ 
+ alogrithm used 	 SENSOR DATA >= MEAN VAULE + THRESHOLD   (UP LIMIT) 
+				 	 SENSOR DATA <= MEAN VAULE - THRESHOLD   (DOWN LIMIT) 
+
+-->
+<div class="row">
+    <div class="container-fluid">
+        <div [hidden]="SetThreshold">
+            <h3>Submitted Thresholds:</h3>
+            <div class="col-xs-6 well ">
+                <h4>Up-limit Thresholds:</h4>
+                <div *ngFor="let value of setValues">
+                    <!--display set threshold values from  mysql data threshold table-->
+                    <div class="row">
+                        <div class="col-xs-3"> Temperature: </div>
+                        <div class="col-xs-9  pull-left ">{{value.temperature_value_add}}</div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-3">Inclination [X]: </div>
+                        <div class="col-xs-9 pull-left"> {{value.inclination_value_X_add}}</div>
+                    </div>
+                  <!--  <div class="row">
+                        <div class="col-xs-3">Inclination [Y]: </div>
+                        <div class="col-xs-9 pull-left"> {{value.inclination_value_Y}}</div>
+                    </div> -->
+                    <h4>Down-limit Thresholds:</h4>
+                    <div class="row">
+                        <div class="col-xs-3"> Temperature: </div>
+                        <div class="col-xs-9  pull-left ">{{value.temperature_value_sub}}</div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-3">Inclination [X]: </div>
+                        <div class="col-xs-9 pull-left"> {{value.inclination_value_X_sub}}</div>
+                    </div>
+                    <!--<div class="row">
+                        <div class="col-xs-3">Inclination [Y]: </div>
+                        <div class="col-xs-9 pull-left"> {{value.inclination_value_Y}}</div>
+                    </div>-->
+                </div>
+                <br>
+                <button class="btn btn-primary" (click)="onEdit()">Edit </button>
+                <!-- <button class="btn btn-primary"  
+		    routerLink="1" routerLinkActive="activeLink" > Edit </button>-->
+            </div>
+        </div>
+        <div class="col-xs-4 well ">
+            <h4>Display Tables:</h4>
+            <button class="btn btn-primary" (click)="onDisplayTables()">Display Data </button>
+            <br>
+            <h4>Download Sensor/health Data:</h4>
+            <button class="btn btn-primary" (click)="onDownloadSensorData()">Sensor Data </button>
+            <button class="btn btn-primary" (click)="onDownloadHealthData()">Health Data </button>
+
+        </div>
+    </div>
+    <!-- Form to edit the threshold values in threshlold table -->
+    <div [hidden]="!SetThreshold">
+        <h1>Update Threshold</h1>
+        <div class="col-xs-6 well ">
+            <h4>Up-limit Thresholds:</h4>
+            <form #Uplimit_ThresholdForm="ngForm">
+                <div class="form-group">
+                    <label for="Temperature">Temperature</label>
+                    <input type="text" class="form-control" id="Temperature_add" placeholder="Enter Value" required [(ngModel)]="model.TemperatureValue_add" name="Temperature" #TemperatureValue_add="ngModel">
+                </div>
+                <div class="form-group">
+                    <label for="Inclination">Inclination [X]</label>
+                    <input type="text" class="form-control" id="Inclination_x_add" placeholder="Enter Value" required [(ngModel)]="model.InclinationValue_X_add" name="Inclination_x_add" #InclinationValue_x_add="ngModel">
+                </div>
+               <!-- <div class="form-group">
+                    <label for="Inclination">Inclination [Y]</label>
+                    <input type="text" class="form-control" id="Inclination_y" placeholder="Enter Value" required [(ngModel)]="model.InclinationValue_Y" name="Inclination_y" #InclinationValue_y="ngModel">
+                </div>-->
+                <h4>Down-limit Thresholds:</h4>
+                <div class="form-group">
+                    <label for="Temperature">Temperature</label>
+                    <input type="text" class="form-control" id="Temperature_sub" placeholder="Enter Value" required [(ngModel)]="model.TemperatureValue_sub" name="Temperature_add" #TemperatureValue_sub="ngModel">
+                </div>
+                <div class="form-group">
+                    <label for="Inclination">Inclination [X]</label>
+                    <input type="text" class="form-control" id="Inclinatio_x_sub" placeholder="Enter Value" required [(ngModel)]="model.InclinationValue_X_sub" name="Inclination_xsub" #InclinationValue_x_sub="ngModel">
+                </div>
+                <button type="submit" class="btn btn-success" (click)="onUpdate()" (click)="refreshSetValues()">Update
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+<!--Display of filtered data from threshold values-->
+<div class="row">
+    <div class="col-xs-12 well ">
+        <h4>Sensor Data</h4>
+        <table border=1 class="table table-striped">
+            <tr>
+                <th><a ng-click="sortField = 'Index'; reverse=!reverse">Index</a></th>
+                <th><a ng-click="sortField = 'Mac'; reverse=!reverse">Mac-Id</a></th>
+                <th><a ng-click="sortField = 'Temperature'; reverse=!reverse">Temperature</a></th>
+                <th><a ng-click="sortField = 'Inclination'; reverse=!reverse">Inclination [X]</a></th>
+                <!--<th><a ng-click="sortField = 'Inclination'; reverse=!reverse">Inclination [Y]</a></th>-->
+                <th><a ng-click="sortField = 'Time'; reverse=!reverse">Time Stamp</a></th>
+            </tr>
+            <tr *ngFor="let data of mysensData ; let i = index" [attr.data-index]="i">
+                <td>{{ i+1}}</td>
+                <td>{{ data.mac_id }}</td>
+                <td>{{ data.temperature_data }}</td>
+                <td>{{ data.inclination_data_X }}</td>
+               <!-- <td>{{ data.inclination_data_Y }}</td>-->
+                <td>{{ data.time_stamp  }}</td>
+        </table>
+    </div>
+</div>
+
+<hr>
+<style>
+.no-style .ng-valid {
+    border-left: 1px solid #CCC
+}
+
+.no-style .ng-invalid {
+    border-left: 1px solid #CCC
+}
+</style>
+<hr>
+
+
+
+
+
+
+
+
+
+
+<!--   <div class="col-xs-6 well">
+        <h4>Inclination data: [X]</h4>
+        <table border=1 class="table table-striped">
+            <tr>
+                <th><a ng-click="sortField = 'Index'; reverse=!reverse">Index</a></th>
+                <th><a ng-click="sortField = 'Mac'; reverse=!reverse">Mac-Id</a></th>
+                <th><a ng-click="sortField = 'Inclination'; reverse=!reverse">Inclination [X]</a></th>
+                <th><a ng-click="sortField = 'Time'; reverse=!reverse">Time Stamp</a></th>
+            </tr>
+            <tr *ngFor="let data of myDataIncliX ; let i = index" [attr.data-index]="i">
+                <td>{{ i+1}}</td>
+                <td>{{ data.mac_id }}</td>
+                <td>{{ data.inclination_data_X }}</td>
+                <td>{{ data.time_stamp }}</td>
+            </tr>
+        </table>
+    </div>
+    <div class="col-xs-6 well">
+        <h4>Inclination data: [Y]</h4>
+        <table border=1 class="table table-striped">
+            <tr>
+                <th><a ng-click="sortField = 'Index'; reverse=!reverse">Index</a></th>
+                <th><a ng-click="sortField = 'Mac'; reverse=!reverse">Mac-Id</a></th>
+                <th><a ng-click="sortField = 'Inclination'; reverse=!reverse">Inclination [Y]</a></th>
+                <th><a ng-click="sortField = 'Time'; reverse=!reverse">Time Stamp</a></th>
+            </tr>
+            <tr *ngFor="let data of myDataIncliX ; let i = index" [attr.data-index]="i">
+                <td>{{ i+1}}</td>
+                <td>{{ data.mac_id }}</td>
+                <td>{{ data.inclination_data_Y }}</td>
+                <td>{{ data.time_stamp }}</td>
+            </tr>
+        </table>
+    </div>
+</div>
+-->
+
+<!--
+
+{{setValues | json}} 
+		        {{value | json}}
+		        
+		        
+		        {{value.date_time}}
+{{value.temperature_value}}
+{{value.inclination_value}}
+
+
+<div class="container-fluid">
+  	<div [hidden]="submitted">
+	    <h1>Set Threshold</h1>
+<div class="col-xs-6 well ">
+	    {{diagnostic}}
+
+	    <form (ngSubmit)="onSubmit($event)" #ThresholdForm="ngForm" 
+	    action="/threshold" method="POST">
+	      <div class="form-group">
+	        <label for="Temperature">Temperature</label>
+	        <input type="text" class="form-control" id="Temperature" 
+	        placeholder="Enter Value" required
+	               [(ngModel)]="model.TemperatureValue" name="Temperature"
+	               #TemperatureValue="ngModel" >
+	      </div>
+	    
+	    	<div class="form-group">
+	        <label for="Inclination">Inclination</label>
+	        <input type="text" class="form-control" id="Inclination" 
+	        placeholder="Enter Value" required 
+	               [(ngModel)]="model.InclinationValue" name="Inclination" 
+	               #InclinationValue="ngModel" >
+	      </div>
+		<button type="submit" class="btn btn-success" >Submit
+		</button>
+		</form>
+		</div>
+	</div>
+
+
+		<div [hidden]="!submitted">
+		    <h2>You submitted the following:</h2>
+<div class="row">		    
+ <div class="col-xs-6 well ">
+		    <div class="row">
+		      <div class="col-xs-3">Temperature: </div>
+		      <div class="col-xs-9  pull-left">{{ model.TemperatureValue }}</div>
+		    </div>
+		    <div class="row">
+		      <div class="col-xs-3">Inclination: </div>
+		      <div class="col-xs-9 pull-left">{{ model.InclinationValue }}</div>
+		    </div>
+		    <br>
+		    <button class="btn btn-primary"  routerLink="1" routerLinkActive="activeLink" > 
+		    Edit </button>
+		</div>
+	</div>
+  </div>
+</div>
+
+
+<hr>
+<style>
+  .no-style .ng-valid {
+  border-left: 1px  solid #CCC
+}
+
+  .no-style .ng-invalid {
+  border-left: 1px  solid #CCC
+}
+</style>
+
+
+
+<hr>
+
+-->
+<!---
+<tr *ngFor= "let tabule of tabules ; let i = index" [attr.data-index]="i"  >
+          <td>{{ i+1}}</td>
+          <td>{{ tabule.mac }}</td>
+          <td>{{ tabule.temp }}</td>
+          <td>{{ tabule.time_stamp }}</td>
+          <td>{{ tabule.epoch_time_stamp }}</td>  
+</tr>
+</table>
+
+
+
+[disabled]="!ThresholdForm.form.valid"
+
+
+<div class="container">
+    <h1>Set Threshold</h1>
+    <form>
+    {{diagnostic}}
+      <div class="form-group">
+        <label for="Temperature">Temperature</label>
+        <input type="text" class="form-control" id="Temperature" required 
+        [(ngModel)]="model.TemperatureValue" name="Temperature" >
+      </div>
+      <div class="form-group">
+        <label for="Inclination">Inclination</label>
+        <input type="text" class="form-control" id="Inclination" required 
+        [(ngModel)]="model.InclinationValue" name="Inclination" >
+      </div>
+      <button type="submit" class="btn btn-success">Submit</button>
+    </form>
+</div>
+
+
+
+
+
+
+-->

@@ -1,0 +1,56 @@
+<div class="fixedContainerMacid" >
+<form class="navbar-form">
+	<div class="fixedContainerMacid">
+        <div class="btn-group">
+             <button type="button" align="left" class="btn btn-default dropdown-toggle" data-toggle="dropdown">Select Mac-Id<span class="caret"></span>
+             </button>
+     		     <ul class="dropdown-menu scrollable-menu" role="menu">
+	                  <li *ngFor= "let address of macAddress">
+    		              <a  (click)="onClick($event)" [routerLink]="['/mac', address]">
+            			       {{address}}
+                 		  </a>
+                  	 </li>
+          		</ul>
+                  
+        </div>
+    </div>
+</form>
+</div>
+
+
+
+	<h3 align="center"> Results for : {{macIdTitle}}</h3>
+<div>
+  
+</div>
+
+
+
+<div class="row">
+	<div class="col-xs-12 well ">
+			<app-temperature-component></app-temperature-component>
+   	</div>
+</div>
+
+<div class="row">
+   	<div class="col-xs-12 well">
+      <app-inclination-component></app-inclination-component>
+  </div>
+</div>
+
+<div class="row">
+    <div class="col-xs-12 well">
+<app-voltage-levels></app-voltage-levels>
+    </div>
+</div>
+
+
+<div class="row">
+    <div class="col-xs-6 well">
+<app-packet-loss></app-packet-loss>
+    </div>
+
+    <div class="col-xs-6 well">
+<app-signal-strength></app-signal-strength>
+    </div>
+</div>

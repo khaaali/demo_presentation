@@ -1,0 +1,13 @@
+temp_thres_add,temp_thres_sub,incli_thres_add,incli_thres_sub,,,,
+,,,,,,,
+mac_4d94,temp_mean_4d94,incli_mean_4d94,temp_count_4d94_add,temp_lastupdate_4d94_add,temp_count_4d94_sub,temp_lastupdate_4d94_sub,incli_count_4d94_add
+incli_lastupdate_4d94_add,incli_count_4d94_sub,incli_lastupdate_4d94_sub,,,,,
+,,,,,,,
+mac_47fa,temp_mean_47fa,incli_mean_47fa,temp_count_47fa_add,temp_lastupdate_47fa_add,temp_count_47fa_sub,temp_lastupdate_47fa_sub,incli_count_47fa_add
+incli_lastupdate_47fa_add,incli_count_47fa_sub,incli_lastupdate_47fa_sub,,,,,
+,,,,,,,
+mac_4818,temp_mean_4818,incli_mean_4818,temp_count_4818_add,temp_lastupdate_4818_add,temp_count_4818_sub,temp_lastupdate_4818_sub,incli_count_4818_add
+incli_lastupdate_4818_add,incli_count_4818_sub,incli_lastupdate_4818_sub,,,,,
+,,,,,,,
+mac_4958,temp_mean_4958,incli_mean_4958,temp_count_4958_add,temp_lastupdate_4958_add,temp_count_4958_sub,temp_lastupdate_4958_sub,incli_count_4958_add
+incli_lastupdate_4958_add,incli_count_4958_sub,incli_lastupdate_4958_sub,,,,,
