@@ -1,0 +1,88 @@
+{
+  "TempUpLimits2": [
+  {
+    "mac_id": "00-17-0d-00-00-30-4d-94",
+    "mail_send_time": "2017-09-23 03:40:50",
+    "sent_mails": 1
+  },
+  {
+    "mac_id": "00-17-0d-00-00-30-47-fa",
+    "mail_send_time": "2017-09-23 03:40:50",
+    "sent_mails": 1
+  },
+  {
+    "mac_id": "00-17-0d-00-00-30-48-18",
+    "mail_send_time": "2017-09-23 03:40:50",
+    "sent_mails": 1
+  },
+  {
+    "mac_id": "00-17-0d-00-00-30-49-58",
+    "mail_send_time": "2017-09-23 03:40:50",
+    "sent_mails": 1
+  }],
+  "TempLowLimits2": [
+  {
+    "mac_id": "00-17-0d-00-00-30-4d-94",
+    "mail_send_time": "2017-09-23 03:40:50",
+    "sent_mails": 1
+  },
+  {
+    "mac_id": "00-17-0d-00-00-30-47-fa",
+    "mail_send_time": "2017-09-23 03:40:50",
+    "sent_mails": 1
+  },
+  {
+    "mac_id": "00-17-0d-00-00-30-48-18",
+    "mail_send_time": "2017-09-23 03:40:50",
+    "sent_mails": 1
+  },
+  {
+    "mac_id": "00-17-0d-00-00-30-49-58",
+    "mail_send_time": "2017-09-23 03:40:50",
+    "sent_mails": 1
+  }],
+  "IncliUpLimits2": [
+  {
+    "mac_id": "00-17-0d-00-00-30-4d-94",
+    "mail_send_time": "2017-09-23 03:40:50",
+    "sent_mails": 1
+  },
+  {
+    "mac_id": "00-17-0d-00-00-30-47-fa",
+    "mail_send_time": "2017-09-23 03:40:50",
+    "sent_mails": 1
+  },
+  {
+    "mac_id": "00-17-0d-00-00-30-48-18",
+    "mail_send_time": "2017-09-23 03:40:50",
+    "sent_mails": 1
+  },
+  {
+    "mac_id": "00-17-0d-00-00-30-49-58",
+    "mail_send_time": "2017-09-23 03:40:50",
+    "sent_mails": 1
+  }],
+  "IncliLowLimits2": [
+
+    {
+      "mac_id": "00-17-0d-00-00-30-4d-94",
+      "mail_send_time": "2017-09-23 03:40:50",
+      "sent_mails": 1
+    },
+    {
+      "mac_id": "00-17-0d-00-00-30-47-fa",
+      "mail_send_time": "2017-09-23 03:40:50",
+      "sent_mails": 1
+    },
+    {
+      "mac_id": "00-17-0d-00-00-30-48-18",
+      "mail_send_time": "2017-09-23 03:40:50",
+      "sent_mails": 1
+    },
+    {
+      "mac_id": "00-17-0d-00-00-30-49-58",
+      "mail_send_time": "2017-09-23 03:40:50",
+      "sent_mails": 1
+    }
+  ]
+}

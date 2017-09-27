@@ -76,8 +76,14 @@ function time() {
 
 };
 
+var TUL_01
 
-
+var obj4 = {
+  TempUpLimits4: [],
+  TempLowLimits4: [],
+  IncliUpLimits4: [],
+  IncliLowLimits4: []
+};
 
 
 app.get("/", function(req, res) {
@@ -569,7 +575,7 @@ app.get("/packet_loss", function(req, res) {
 //runs every minute 35th second
 var rule = new schedule.RecurrenceRule();
 //rule.minute = 40;
-rule.second = [20, 40, 59];
+rule.second = [10, 20, 30, 40, 50];
 
 var job = schedule.scheduleJob(rule, getSetThresholds);
 
@@ -611,14 +617,16 @@ function getSetThresholds() {
       //console.log("check", _.isEqual(rows[_Last], rows[_Previous]));
 
 
-      // arrays for adding the diff data from database
+      // arrays for adding the diff data from database :spliting strings
       var payload = [];
       var TempUpLimit = [];
       var TempLowLimit = [];
       var IncliUpLimit = [];
       var IncliLowLimit = [];
 
-      // creating json object and writing to file
+
+
+      // creating json object for filtering the old data: creating key values for the data
       var obj = {
         TempUpLimits: [],
         TempLowLimits: [],
@@ -627,19 +635,42 @@ function getSetThresholds() {
       };
 
 
-      // to keep record on mails sent by macid/moteid
+
+
+      // used for writing into file with time and macid/moteid
       var obj2 = {
-        TempUpLimits: [],
-        TempLowLimits: [],
-        IncliUpLimits: [],
-        IncliLowLimits: []
+        TempUpLimits2: [],
+        TempLowLimits2: [],
+        IncliUpLimits2: [],
+        IncliLowLimits2: []
       };
 
+      // fileterd data for between 0 or 3 hours (below object and arrays used independently)
       // arrays for holding the data after checking valid duration of days and hours
-      TempUpLimitz = []
+
+      var obj3 = {
+        TempUpLimits3: [],
+        TempLowLimits3: [],
+        IncliUpLimits3: [],
+        IncliLowLimits3: []
+      };
+
+      TempUpLimitz = [] // contains string data for sending mail
       TempLowLimitz = []
       IncliUpLimitz = []
       IncliLowLimitz = []
+
+
+
+
+      /*
+      macid:
+      sent_mail:0/1 0- no mail has been sent recently: else mail
+                    1- mail has been sent recently i.e: if 1 no mail
+      mail_send_time:latest time  */
+
+
+
 
       var differences = diff(l, p);
       var dif = JSON.stringify(differences);
@@ -655,6 +686,7 @@ function getSetThresholds() {
       _.each(differ, function(item) {
         payload.push(_.pick(item, 'path', 'lhs'));
       });
+
       //console.log("payload", payload);
 
       _.each(payload, function(item) {
@@ -691,6 +723,70 @@ function getSetThresholds() {
           //console.log(count)
         }
       }
+      // preparing json object  for duration check
+
+      var time_now = moment().format('YYYY-MM-DD HH:mm:ss')
+      var timenow = moment(time_now)
+
+      // arrays for adding the diff data from database
+
+      for (i = 0; i < TempUpLimit.length; i++) {
+        pay_array = TempUpLimit[i].split(/\s+/)
+        obj.TempUpLimits.push({ mac_id: pay_array[1], notif_time: pay_array[7] + ' ' + pay_array[8], threshold: pay_array[5] });
+
+        notify_time = obj.TempUpLimits[i].notif_time
+        var duration = moment.duration(timenow.diff(notify_time));
+        if (duration._data.days >= 1) {
+          console.log('Duration old data: No mail')
+        } else if (duration._data.days == 0 && duration._data.hours <= 3) {
+          //console.log('mailing', duration._data)
+          TempUpLimitz.push('mac_id: ' + obj.TempUpLimits[i].mac_id + ' ' + 'has reached threshold' + ' ' + obj.TempUpLimits[i].threshold + ' ' + 'at' + ' ' + obj.TempUpLimits[i].notif_time)
+          obj3.TempUpLimits3.push({ mac_id: obj.TempUpLimits[i].mac_id, notif_time: obj.TempUpLimits[i].notif_time })
+        }
+      }
+      for (i = 0; i < TempLowLimit.length; i++) {
+        pay_array = TempLowLimit[i].split(/\s+/)
+        obj.TempLowLimits.push({ mac_id: pay_array[1], notif_time: pay_array[7] + ' ' + pay_array[8], threshold: pay_array[5] });
+        notify_time = obj.TempLowLimits[i].notif_time
+        var duration = moment.duration(timenow.diff(notify_time));
+        if (duration._data.days >= 1) {
+          console.log('Duration old data: No mail')
+        } else if (duration._data.days == 0 && duration._data.hours <= 3) {
+          //console.log('mailing', duration._data)
+          TempLowLimitz.push('mac_id: ' + obj.TempLowLimits[i].mac_id + ' ' + 'has reached threshold' + ' ' + obj.TempLowLimits[i].threshold + ' ' + 'at' + ' ' + obj.TempLowLimits[i].notif_time)
+          obj3.TempLowLimits3.push({ mac_id: obj.TempLowLimits[i].mac_id, notif_time: obj.TempLowLimits[i].notif_time })
+        }
+      }
+      for (i = 0; i < IncliUpLimit.length; i++) {
+        pay_array = IncliUpLimit[i].split(/\s+/)
+        obj.IncliUpLimits.push({ mac_id: pay_array[1], notif_time: pay_array[7] + ' ' + pay_array[8], threshold: pay_array[5] });
+        notify_time = obj.IncliUpLimits[i].notif_time
+        var duration = moment.duration(timenow.diff(notify_time));
+        if (duration._data.days >= 1) {
+          console.log('Duration old data: No mail')
+        } else if (duration._data.days == 0 && duration._data.hours <= 3) {
+          //console.log('mailing', duration._data)
+          IncliUpLimitz.push('mac_id: ' + obj.IncliUpLimits[i].mac_id + ' ' + 'has reached threshold' + ' ' + obj.IncliUpLimits[i].threshold + ' ' + 'at' + ' ' + obj.IncliUpLimits[i].notif_time)
+          obj3.IncliUpLimits3.push({ mac_id: obj.IncliUpLimits[i].mac_id, notif_time: obj.IncliUpLimits[i].notif_time })
+
+        }
+      }
+      for (i = 0; i < IncliLowLimit.length; i++) {
+        pay_array = IncliLowLimit[i].split(/\s+/)
+        obj.IncliLowLimits.push({ mac_id: pay_array[1], notif_time: pay_array[7] + ' ' + pay_array[8], threshold: pay_array[5] });
+        notify_time = obj.IncliLowLimits[i].notif_time
+        var duration = moment.duration(timenow.diff(notify_time));
+        if (duration._data.days >= 1) {
+          console.log('Duration old data: No mail')
+        } else if (duration._data.days == 0 && duration._data.hours <= 3) {
+          //console.log('mailing', duration._data)
+          IncliLowLimitz.push('mac_id: ' + obj.IncliLowLimits[i].mac_id + ' ' + 'has reached threshold' + ' ' + obj.IncliLowLimits[i].threshold + ' ' + 'at' + ' ' + obj.IncliLowLimits[i].notif_time)
+          obj3.IncliLowLimits3.push({ mac_id: obj.IncliLowLimits[i].mac_id, notif_time: obj.IncliLowLimits[i].notif_time })
+
+        }
+      }
+
+
 
       if (err) {
         JSON.stringify(err);
@@ -700,116 +796,42 @@ function getSetThresholds() {
       } else if (count == 16) {
         console.log("Null data: No mail:", count);
       } else {
+
+        if (obj4.TempUpLimits4.length != 0) {
+          console.log("imhere2")
+          console.log(obj4.TempUpLimits4, obj3.TempUpLimits3)
+          var combine_diff = _.defaultsDeep(obj4.TempUpLimits4, obj3.TempUpLimits3)
+          console.log("imhere3")
+          console.log(combine_diff)
+          var time_to_check = moment().format('YYYY-MM-DD HH:mm:ss')
+          for (i = 0; i < combine_diff.length; i++) {
+            sent_mail_time = combine_diff[i].sent_mail_time
+            var duration = moment.duration(time_to_check.diff(sent_mail_time));
+            if (duration._data.minutes <= 10) {
+              console.log("imhere4")
+              obj3.TempUpLimits3[i].pop()
+            }
+          console.log("imhere5")
+
+          }
+        }
+
+
+
         console.log("You gonna get a mail!!");
 
-         // preparing json object and writing to file
-
-      for (i = 0; i < TempUpLimit.length; i++) {
-        pay_array = TempUpLimit[i].split(/\s+/)
-        obj.TempUpLimits.push({ mac_id: pay_array[1], notif_time: pay_array[7] + ' ' + pay_array[8], threshold: pay_array[5] });
-      }
-      for (i = 0; i < TempLowLimit.length; i++) {
-        pay_array = TempLowLimit[i].split(/\s+/)
-        obj.TempLowLimits.push({ mac_id: pay_array[1], notif_time: pay_array[7] + ' ' + pay_array[8], threshold: pay_array[5] });
-      }
-      for (i = 0; i < IncliUpLimit.length; i++) {
-        pay_array = IncliUpLimit[i].split(/\s+/)
-        obj.IncliUpLimits.push({ mac_id: pay_array[1], notif_time: pay_array[7] + ' ' + pay_array[8], threshold: pay_array[5] });
-      }
-      for (i = 0; i < IncliLowLimit.length; i++) {
-        pay_array = IncliLowLimit[i].split(/\s+/)
-        obj.IncliLowLimits.push({ mac_id: pay_array[1], notif_time: pay_array[7] + ' ' + pay_array[8], threshold: pay_array[5] });
-      }
-
-      var json = JSON.stringify(obj);
-      fs.writeFile('nodemailer_duration_check.json', json, 'utf8');
-
-      // logs from diff array 
-      //console.log(TempUpLimit, TempLowLimit, IncliUpLimit, IncliLowLimit);
-      // moment.js calculate current time
-      var time_now = moment().format('YYYY-MM-DD HH:mm:ss')
-      var timenow = moment(time_now)
+        // console.log('imhere1', TempUpLimitz, TempLowLimitz, IncliUpLimitz, IncliLowLimitz);
 
 
-      var duration = moment.duration(timenow.diff(timenow));
-
-      console.log("mail sent")
-      //sendMail(TempUpLimit, TempLowLimit, IncliUpLimit, IncliLowLimit);
-
-
-
-      // reading json file and checking the duration on each uplimit and downlimits
-      fs.readFile('nodemailer_duration_check.json', 'utf8', function readFileCallback(err, data) {
-        if (err) {
-          console.log(err);
-        } else {
-          obj = JSON.parse(data); //now it an object
-          console.log(obj)
-          for (i = 0; i < obj.TempUpLimits.length; i++) {
-
-            notify_time = obj.TempUpLimits[i].notif_time
-            var duration = moment.duration(timenow.diff(notify_time));
-            if (duration._data.days >= 1) {
-              console.log('Days as duration (old data')
-            } else if (duration._data.days == 0 && duration._data.hours <= 3) {
-              console.log('mailing')
-              TempUpLimitz.push('mac_id: ' + obj.TempUpLimits[i].mac_id + ' ' + 'has reached threshold' + ' ' + obj.TempUpLimits[i].threshold + ' ' + 'at' + ' ' + obj.TempUpLimits[i].notif_time)
-
-            }
-          }
-
-          for (i = 0; i < obj.TempLowLimits.length; i++) {
-
-            notify_time = obj.TempLowLimits[i].notif_time
-            var duration = moment.duration(timenow.diff(notify_time));
-            if (duration._data.days >= 1) {
-              console.log('Days as duration (old data')
-            } else if (duration._data.days == 0 && duration._data.hours <= 3) {
-              console.log('mailing')
-              TempLowLimitz.push('mac_id: ' + obj.TempLowLimits[i].mac_id + ' ' + 'has reached threshold' + ' ' + obj.TempLowLimits[i].threshold + ' ' + 'at' + ' ' + obj.TempLowLimits[i].notif_time)
-
-            }
-          }
-
-
-          for (i = 0; i < obj.IncliUpLimits.length; i++) {
-
-            notify_time = obj.IncliUpLimits[i].notif_time
-            var duration = moment.duration(timenow.diff(notify_time));
-            if (duration._data.days >= 1) {
-              console.log('Days as duration (old data')
-            } else if (duration._data.days == 0 && duration._data.hours <= 3) {
-              console.log('mailing')
-              IncliUpLimitz.push('mac_id: ' + obj.IncliUpLimits[i].mac_id + ' ' + 'has reached threshold' + ' ' + obj.IncliUpLimits[i].threshold + ' ' + 'at' + ' ' + obj.IncliUpLimits[i].notif_time)
-
-            }
-          }
-
-
-          for (i = 0; i < obj.IncliLowLimits.length; i++) {
-
-            notify_time = obj.IncliLowLimits[i].notif_time
-            var duration = moment.duration(timenow.diff(notify_time));
-            if (duration._data.days >= 1) {
-              console.log('Days as duration (old data')
-            } else if (duration._data.days == 0 && duration._data.hours <= 3) {
-              console.log('mailing')
-              IncliLowLimitz.push('mac_id: ' + obj.IncliLowLimits[i].mac_id + ' ' + 'has reached threshold' + ' ' + obj.IncliLowLimits[i].threshold + ' ' + 'at' + ' ' + obj.IncliLowLimits[i].notif_time)
-
-            }
-          }
-
-        }
-        console.log(TempUpLimitz, TempLowLimitz, IncliUpLimitz, IncliLowLimitz);
-      });
+        // logs from diff array 
+        //console.log(TempUpLimit, TempLowLimit, IncliUpLimit, IncliLowLimit);
+        // moment.js calculate current time
 
 
 
 
-
-
-
-
+        console.log("mail sent")
+        sendMail(TempUpLimit, TempLowLimit, IncliUpLimit, IncliLowLimit);
       }
 
       connection.release();
@@ -828,6 +850,7 @@ function sendMail(TUL, TLL, IUL, ILL) {
   var TLL_len = TLL.length
   var IUL_len = IUL.length
   var ILL_len = ILL.length
+  var time_now = moment().format('YYYY-MM-DD HH:mm:ss')
 
   var mailer = require("nodemailer");
   var Transport = mailer.createTransport({
@@ -865,17 +888,36 @@ function sendMail(TUL, TLL, IUL, ILL) {
     html: content
   }
 
+  /* 
   Transport.sendMail(mail, function(error, response) {
-    if (error) {
-      console.log(error);
-    } else {
-      console.log("Message sent: ");
-    }
+     if (error) {
+       console.log(error);
+     } else {
+       console.log("Message sent: ");
+     }
 
-    Transport.close();
-  });
+     Transport.close();
+   });
+   */
+  obj4 = {
+    TempUpLimits4: [],
+    TempLowLimits4: [],
+    IncliUpLimits4: [],
+    IncliLowLimits4: []
+  };
 
-  console.log('The answer to life, the universe, and everything!', mail);
+  for (i = 0; i < TUL.length; i++) {
+    pay_array = TUL[i].split(/\s+/)
+    obj4.TempUpLimits4.push({ mac_id: pay_array[1], sent_mail_time: time_now });
+  }
+
+
+
+
+
+
+
+  // console.log('The answer to life, the universe, and everything!', mail);
 }
 
 
