@@ -720,7 +720,7 @@ function getSetThresholds() {
       for (i = 0; i < vals.length; i++) {
         if (vals[i] == null) {
           count++
-          //console.log(count)
+          console.log(count)
         }
       }
       // preparing json object  for duration check
@@ -738,7 +738,7 @@ function getSetThresholds() {
         var duration = moment.duration(timenow.diff(notify_time));
         if (duration._data.days >= 1) {
           console.log('Duration old data: No mail')
-        } else if (duration._data.days == 0 && duration._data.hours <= 3) {
+        } else if (duration._data.days == 0 && duration._data.hours <= 10) {
           //console.log('mailing', duration._data)
           TempUpLimitz.push('mac_id: ' + obj.TempUpLimits[i].mac_id + ' ' + 'has reached threshold' + ' ' + obj.TempUpLimits[i].threshold + ' ' + 'at' + ' ' + obj.TempUpLimits[i].notif_time)
           obj3.TempUpLimits3.push({ mac_id: obj.TempUpLimits[i].mac_id, notif_time: obj.TempUpLimits[i].notif_time })
@@ -751,7 +751,7 @@ function getSetThresholds() {
         var duration = moment.duration(timenow.diff(notify_time));
         if (duration._data.days >= 1) {
           console.log('Duration old data: No mail')
-        } else if (duration._data.days == 0 && duration._data.hours <= 3) {
+        } else if (duration._data.days == 0 && duration._data.hours <= 10) {
           //console.log('mailing', duration._data)
           TempLowLimitz.push('mac_id: ' + obj.TempLowLimits[i].mac_id + ' ' + 'has reached threshold' + ' ' + obj.TempLowLimits[i].threshold + ' ' + 'at' + ' ' + obj.TempLowLimits[i].notif_time)
           obj3.TempLowLimits3.push({ mac_id: obj.TempLowLimits[i].mac_id, notif_time: obj.TempLowLimits[i].notif_time })
@@ -764,7 +764,7 @@ function getSetThresholds() {
         var duration = moment.duration(timenow.diff(notify_time));
         if (duration._data.days >= 1) {
           console.log('Duration old data: No mail')
-        } else if (duration._data.days == 0 && duration._data.hours <= 3) {
+        } else if (duration._data.days == 0 && duration._data.hours <= 10) {
           //console.log('mailing', duration._data)
           IncliUpLimitz.push('mac_id: ' + obj.IncliUpLimits[i].mac_id + ' ' + 'has reached threshold' + ' ' + obj.IncliUpLimits[i].threshold + ' ' + 'at' + ' ' + obj.IncliUpLimits[i].notif_time)
           obj3.IncliUpLimits3.push({ mac_id: obj.IncliUpLimits[i].mac_id, notif_time: obj.IncliUpLimits[i].notif_time })
@@ -787,7 +787,6 @@ function getSetThresholds() {
       }
 
 
-
       if (err) {
         JSON.stringify(err);
       } else if (LastEqualPrevious == _.isEqual(rows[_Last], rows[_Previous])) {
@@ -796,27 +795,26 @@ function getSetThresholds() {
       } else if (count == 16) {
         console.log("Null data: No mail:", count);
       } else {
+          console.log(obj3.TempUpLimits3)
 
         if (obj4.TempUpLimits4.length != 0) {
           console.log("imhere2")
-          console.log(obj4.TempUpLimits4, obj3.TempUpLimits3)
-          var combine_diff = _.defaultsDeep(obj4.TempUpLimits4, obj3.TempUpLimits3)
+          console.log(obj4.TempUpLimits4)
+          console.log(obj3.TempUpLimits3)
           console.log("imhere3")
-          console.log(combine_diff)
           var time_to_check = moment().format('YYYY-MM-DD HH:mm:ss')
-          for (i = 0; i < combine_diff.length; i++) {
-            sent_mail_time = combine_diff[i].sent_mail_time
-            var duration = moment.duration(time_to_check.diff(sent_mail_time));
-            if (duration._data.minutes <= 10) {
-              console.log("imhere4")
-              obj3.TempUpLimits3[i].pop()
+          obj3.TempUpLimits3.forEach(obj3Child => {
+            let objtToMerge;
+            if (!(objtToMerge = _.find(obj4.TempUpLimits4, function(obj4Child) { return obj4Child.mac_id === obj3Child.mac_id; }))) {
+              obj4.TempUpLimits4.push(obj3Child);
+            } else {
+              Object.assign(objtToMerge, obj3Child);
             }
-          console.log("imhere5")
+          });
+          console.log(obj4.TempUpLimits4);
+          //var duration = moment.duration(time_to_check.diff(sent_mail_time));
 
-          }
         }
-
-
 
         console.log("You gonna get a mail!!");
 
