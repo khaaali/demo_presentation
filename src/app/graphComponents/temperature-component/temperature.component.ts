@@ -1,8 +1,10 @@
 import { Component, OnInit,Input,Output,EventEmitter } from '@angular/core';
 import { HttpModule }    from '@angular/http';
 import { ActivatedRoute, Params,Router } from '@angular/router';
+import { FormGroup, FormControl, FormBuilder } from '@angular/forms';
 import { MySqlService } from '../../app.service';
 import {MyData} from '../../StructData';
+import {Thresholds} from '../../Threshold';
 
 
 declare const CanvasJS: any;
@@ -19,9 +21,8 @@ export class TemperatureComponent implements OnInit {
  
 
   public dataTemp ;
- 
- myData:MyData[];
-
+  myData:MyData[];
+ // @Input() dateTime:String
   
   
   constructor(
@@ -34,7 +35,7 @@ export class TemperatureComponent implements OnInit {
 
   
     ngOnInit(): any {
-        
+
         this.route.params 
        .switchMap((params: Params) => this._MySqlService.getTemperatures(String(params['id'])))
        .subscribe(myData => {

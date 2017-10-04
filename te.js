@@ -144,3 +144,9 @@ else if (obj4.TempUpLimits4.length != 0 || obj4.TempLowLimits4.length != 0 || ob
 
           sendMail(TempUpLimit_G10min, TempLowLimit_G10min, IncliUpLimit_G10min, IncliLowLimit_G10min);
         }
+
+
+
+        .path[3].attributes["0"].ownerElement.childNodes[5].attributes["0"].ownerElement.childNodes[3].attributes[4].nodeValue
+
+        2017-09-12  10:03:44 

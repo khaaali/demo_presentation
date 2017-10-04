@@ -15,7 +15,7 @@ import { DataVisualizationComponent } from './data-visualization/data-visualizat
 import { VoltageLevelsComponent } from './graphComponents/voltage-levels/voltage-levels.component';
 import { SignalStrengthComponent } from './graphComponents/signal-strength/signal-strength.component';
 import { PacketLossComponent } from './graphComponents/packet-loss/packet-loss.component';
-
+import { MomentModule } from 'angular2-moment';
 
 const appRoutes: Routes = [
   { path: 'home', component: HomeComponent },
@@ -23,7 +23,7 @@ const appRoutes: Routes = [
   { path: 'configs',component: ConfigComponent },
   { path: 'dataVisualization',component: DataVisualizationComponent },
   { path: 'mac/:id',component: DataVisualizationComponent },
-  { path: '**',component: HomeComponent },
+  //{ path: '**',component: HomeComponent },
 ];
 
 
@@ -46,6 +46,7 @@ const appRoutes: Routes = [
     BrowserModule,
     FormsModule,
     HttpModule,
+    MomentModule,
     RouterModule.forRoot(appRoutes)
   ],
   providers: [MySqlService],

@@ -1074,16 +1074,6 @@ function sendMail(TUL, TLL, IUL, ILL) {
 
 
 
-
-
-
-
-
-
-
-
-
-
 function redirectRouter(req, res) {
   res.sendFile(__dirname + '/dist/index.html');
 }
