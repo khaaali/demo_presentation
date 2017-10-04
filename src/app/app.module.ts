@@ -23,7 +23,7 @@ const appRoutes: Routes = [
   { path: 'configs',component: ConfigComponent },
   { path: 'dataVisualization',component: DataVisualizationComponent },
   { path: 'mac/:id',component: DataVisualizationComponent },
-  //{ path: '**',component: HomeComponent },
+  { path: '**',component: HomeComponent },
 ];
 
 
